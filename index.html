@@ -1,0 +1,292 @@
+<!-- To view our website right click on index.html and select reveal in file explorer -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduSpark - Fun Learning for Kids</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      color: #172c66;
+    }
+    header {
+      background-color: #f582ae;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3rem;
+    }
+    header p {
+      font-size: 1.2rem;
+    }
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .section {
+      margin: 20px 0;
+      text-align: center;
+    }
+    button {
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      background-color: #8bd3dd;
+      color: #001858;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #f582ae;
+      transform: scale(1.05);
+    }
+    .video-list video {
+      width: 100%;
+      margin-bottom: 15px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .quiz-box {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    .options button {
+      background-color: #fcd5ce;
+      color: #000;
+      width: 100%;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+    .score {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      color: #005f73;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EduSpark</h1>
+    <p>🎉 Fun Learning with Videos and Voice Quizzes 🎤</p>
+  </header>
+
+  <main>
+    <div class="section">
+      <h2>What do you want to do?</h2>
+      <button onclick="showVideoSection()">🎬 Watch Videos</button>
+      <button onclick="showQuizSubjects()">🧠 Take a Quiz</button>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div class="section video-list" id="videoSection" style="display: none;">
+      <h3>📚 Select a Subject to Watch</h3>
+      <h4>🔬 Science</h4>
+      <video controls>
+        <source src="videos/science1.mp4" type="video/mp4">
+      </video>
+      <h4>➕ Math</h4>
+      <video controls>
+        <source src="videos/math1.mp4" type="video/mp4">
+      </video>
+      <h4>🔤 English</h4>
+      <video controls>
+        <source src="videos/english1.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- QUIZ SUBJECT SELECTOR -->
+    <div class="section" id="subjectSelector" style="display: none;">
+      <h3>🧠 Choose a Quiz Subject</h3>
+      <button onclick="startQuiz('science')">🔬 Science</button>
+      <button onclick="startQuiz('math')">➕ Math</button>
+      <button onclick="startQuiz('english')">🔤 English</button>
+    </div>
+
+    <!-- QUIZ BOX -->
+    <div class="section quiz-box" id="quizSection" style="display: none;">
+      <div class="score" id="scoreDisplay">Score: 0</div>
+      <p id="questionText"></p>
+      <div class="options" id="optionsContainer"></div>
+      <button onclick="startListening()">🎤 Speak Your Answer</button>
+    </div>
+  </main>
+
+  <script>
+    const scienceQuestions = [
+      { question: "What do plants need to grow?", options: ["Milk", "Oil", "Sunlight, Water and Air", "Ice"], correct: "Sunlight, Water and Air" },
+      { question: "What gas do we breathe in?", options: ["Oxygen", "Hydrogen", "Carbon", "Helium"], correct: "Oxygen" },
+      { question: "Which part of the plant is green and makes food?", options: ["Stem", "Leaf", "Root", "Flower"], correct: "Leaf" },
+      { question: "What do we use to look at stars?", options: ["Microscope", "Telescope", "Magnifier", "Binoculars"], correct: "Telescope" },
+      { question: "How many legs does an insect have?", options: ["4", "6", "8", "10"], correct: "6" },
+      { question: "What do bees make?", options: ["Milk", "Honey", "Juice", "Butter"], correct: "Honey" },
+      { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Venus", "Jupiter"], correct: "Mars" },
+      { question: "What is the boiling point of water?", options: ["50°C", "100°C", "200°C", "10°C"], correct: "100°C" },
+      { question: "Which animal is the largest mammal?", options: ["Elephant", "Giraffe", "Blue Whale", "Tiger"], correct: "Blue Whale" },
+      { question: "Which sense organ do we use to smell?", options: ["Eye", "Ear", "Nose", "Skin"], correct: "Nose" },
+      { question: "Which of these is NOT a state of matter?", options: ["Solid", "Liquid", "Gas", "Plastic"], correct: "Plastic" },
+      { question: "Which planet do we live on?", options: ["Mars", "Venus", "Earth", "Jupiter"], correct: "Earth" },
+      { question: "What is a baby frog called?", options: ["Cub", "Tadpole", "Chick", "Calf"], correct: "Tadpole" },
+      { question: "How many bones are there in the adult human body?", options: ["106", "206", "306", "56"], correct: "206" },
+      { question: "Which part of the body pumps blood?", options: ["Lungs", "Liver", "Heart", "Brain"], correct: "Heart" },
+      { question: "What do we call water that falls from clouds?", options: ["Snow", "Rain", "Fog", "Wind"], correct: "Rain" },
+      { question: "What do you call animals that eat only plants?", options: ["Carnivores", "Herbivores", "Omnivores", "Vegetarians"], correct: "Herbivores" },
+      { question: "What is the main source of energy for Earth?", options: ["Wind", "Moon", "Sun", "Electricity"], correct: "Sun" },
+      { question: "Which body part helps us to see?", options: ["Mouth", "Ears", "Eyes", "Hands"], correct: "Eyes" },
+      { question: "Which of these animals can fly?", options: ["Tiger", "Frog", "Elephant", "Eagle"], correct: "Eagle" }
+    ];
+
+    const mathQuestions = [
+      { question: "What is 2 + 3?", options: ["4", "5", "6", "2"], correct: "5" },
+      { question: "What is 10 - 4?", options: ["5", "6", "4", "7"], correct: "6" },
+      { question: "What is 5 × 2?", options: ["10", "7", "12", "15"], correct: "10" },
+      { question: "What is 9 ÷ 3?", options: ["2", "3", "4", "5"], correct: "3" },
+      { question: "What number comes after 29?", options: ["28", "30", "31", "32"], correct: "30" },
+      { question: "What is 7 + 6?", options: ["12", "13", "14", "15"], correct: "13" },
+      { question: "Which is the smallest: 2, 5, 1, 9?", options: ["2", "5", "1", "9"], correct: "1" },
+      { question: "What is 8 × 0?", options: ["8", "1", "0", "10"], correct: "0" },
+      { question: "What is 20 divided by 4?", options: ["4", "5", "6", "3"], correct: "5" },
+      { question: "What is the sum of 6 and 7?", options: ["12", "13", "14", "15"], correct: "13" },
+      { question: "How many sides does a triangle have?", options: ["3", "4", "5", "6"], correct: "3" },
+      { question: "What is 100 - 99?", options: ["2", "1", "0", "10"], correct: "1" },
+      { question: "Which number is even?", options: ["3", "5", "6", "9"], correct: "6" },
+      { question: "What is 4 + 4?", options: ["6", "7", "8", "9"], correct: "8" },
+      { question: "What is 15 - 5?", options: ["10", "11", "12", "9"], correct: "10" },
+      { question: "How many hours in a day?", options: ["10", "24", "12", "20"], correct: "24" },
+      { question: "Which number is greater: 25 or 52?", options: ["25", "52"], correct: "52" },
+      { question: "How many tens are there in 50?", options: ["5", "10", "2", "15"], correct: "5" },
+      { question: "What shape has four equal sides?", options: ["Triangle", "Circle", "Square", "Rectangle"], correct: "Square" },
+      { question: "What is half of 10?", options: ["4", "5", "6", "7"], correct: "5" }
+    ];
+    const englishQuestions = [
+      { question: "What is the opposite of big?", options: ["Huge", "Small", "Tall", "Wide"], correct: "Small" },
+      { question: "Which one is a noun?", options: ["Run", "Blue", "Cat", "Quickly"], correct: "Cat" },
+      { question: "Which is a verb?", options: ["Jump", "Blue", "Tall", "Quick"], correct: "Jump" },
+      { question: "What sound does 'C' make in 'Cat'?", options: ["Sss", "Kuh", "Tuh", "Chuh"], correct: "Kuh" },
+      { question: "What is the plural of 'dog'?", options: ["Dogs", "Doges", "Dogz", "Doggies"], correct: "Dogs" },
+      { question: "Which word is a color?", options: ["Car", "Run", "Blue", "Chair"], correct: "Blue" },
+      { question: "What letter comes after B?", options: ["C", "D", "A", "E"], correct: "C" },
+      { question: "Which is a punctuation mark?", options: [".", "&", "#", "@"], correct: "." },
+      { question: "Which is a question word?", options: ["And", "Because", "Why", "Then"], correct: "Why" },
+      { question: "Which is a capital letter?", options: ["a", "b", "A", "e"], correct: "A" },
+      { question: "Which is a sentence?", options: ["Dog", "Running fast", "I like pizza", "Pizza!"], correct: "I like pizza" },
+      { question: "Which one is an adjective?", options: ["Happy", "Quickly", "Run", "Cat"], correct: "Happy" },
+      { question: "What is the opposite of up?", options: ["In", "Out", "Down", "Over"], correct: "Down" },
+      { question: "What do we call the name of a person?", options: ["Verb", "Adjective", "Noun", "Preposition"], correct: "Noun" },
+      { question: "Which is a greeting?", options: ["Bye", "Thanks", "Hello", "Wow"], correct: "Hello" },
+      { question: "What do you put at the end of a question?", options: [".", "!", "?", ","], correct: "?" },
+      { question: "Which one is not a vowel?", options: ["A", "E", "Z", "I"], correct: "Z" },
+      { question: "Which is the correct spelling?", options: ["Appul", "Apple", "Aple", "Apel"], correct: "Apple" },
+      { question: "Choose the rhyming word for 'hat'", options: ["Hot", "Hit", "Cat", "Hat"], correct: "Cat" },
+      { question: "Which is a proper noun?", options: ["Boy", "City", "Ravi", "Girl"], correct: "Ravi" }
+    ];
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function showVideoSection () {
+      document.getElementById("videoSection").style.display = "block";
+      document.getElementById("subjectSelector").style.display = "none";
+      document.getElementById("quizSection").style.display = "none";
+    }
+
+    function showQuizSubjects() {
+      document.getElementById("videoSection").style.display = "none";
+      document.getElementById("subjectSelector").style.display = "block";
+      document.getElementById("quizSection").style.display = "none";
+    }
+
+    function startQuiz(subject) {
+      if (subject === 'science') currentQuestions = scienceQuestions;
+      if (subject === 'math') currentQuestions = mathQuestions;
+      if (subject === 'english') currentQuestions = englishQuestions;
+
+      score = 0;
+      currentQuestionIndex = 0;
+      document.getElementById("quizSection").style.display = "block";
+      document.getElementById("subjectSelector").style.display = "none";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const question = currentQuestions[currentQuestionIndex];
+      document.getElementById("questionText").textContent = question.question;
+      speak(question.question);
+      const optionsDiv = document.getElementById("optionsContainer");
+      optionsDiv.innerHTML = "";
+
+      question.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(answer) {
+      const correct = currentQuestions[currentQuestionIndex].correct;
+      if (answer.toLowerCase() === correct.toLowerCase()) {
+        speak("Wow! Correct answer!");
+        score++;
+        document.getElementById("scoreDisplay").textContent = "Score: " + score;
+      } else {
+        speak("Oops! That was wrong. The correct answer is " + correct);
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < currentQuestions.length) {
+        setTimeout(() => showQuestion(), 2000);
+      } else {
+        setTimeout(() => {
+          speak(`Great job! You scored ${score} out of ${currentQuestions.length}`);
+          alert("🎉 Quiz Finished! Score: " + score);
+          document.getElementById("quizSection").style.display = "none";
+        }, 2500);
+      }
+    }
+
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-IN';
+      msg.pitch = 1;
+      msg.rate = 0.9;
+      const voices = window.speechSynthesis.getVoices();
+      msg.voice = voices.find(v => v.lang === 'en-IN') || voices[0];
+      window.speechSynthesis.speak(msg);
+    }
+
+    // Voice Recognition
+    function startListening() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-IN';
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const spokenAnswer = event.results[0][0].transcript;
+        checkAnswer(spokenAnswer);
+      };
+
+      recognition.onerror = function(event) {
+        speak("Sorry, I didn't catch that. Please try again.");
+      };
+    }
+
+    window.speechSynthesis.onvoiceschanged = () => {};
+  </script>
+</body>
+</html>
+
